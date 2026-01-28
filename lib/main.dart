@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tipple_drinks/widgets/app_bg.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
@@ -46,6 +45,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)
+      ..setUserAgent("Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36")
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (p) {
@@ -58,28 +58,28 @@ class _WebViewScreenState extends State<WebViewScreen> {
           onWebResourceError: (error) {
             debugPrint('WebView error: ${error.description}');
           },
+          // OPTIONAL: Add this to handle redirects if Google tries to open a new tab
+          onNavigationRequest: (NavigationRequest request) {
+            return NavigationDecision.navigate;
+          },
         ),
       )
-      ..loadRequest(Uri.parse('https://web.tippledrinks.com/version-test'));
+      ..loadRequest(Uri.parse('https://web.tippledrinks.com'));
   }
 
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
-      child: SafeArea(
-        child: Scaffold(
-          body: Stack(
-            children: [
-              WebViewWidget(controller: _controller),
-              if (progress < 1)
-                LinearProgressIndicator(
-                  value: progress,
-                  color: const Color(0xFFDF422A),
-                  backgroundColor: Colors.white,
-                ),
-            ],
-          ),
-        ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          WebViewWidget(controller: _controller),
+          if (progress < 1)
+            LinearProgressIndicator(
+              value: progress,
+              color: const Color(0xFFDF422A),
+              backgroundColor: Colors.white,
+            ),
+        ],
       ),
     );
   }
