@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tipple_drinks/widgets/app_bg.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
@@ -69,17 +70,21 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (progress < 1)
-            LinearProgressIndicator(
-              value: progress,
-              color: const Color(0xFFDF422A),
-              backgroundColor: Colors.white,
-            ),
-        ],
+    return AppBackground(
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              WebViewWidget(controller: _controller),
+              if (progress < 1)
+                LinearProgressIndicator(
+                  value: progress,
+                  color: const Color(0xFFDF422A),
+                  backgroundColor: Colors.white,
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
