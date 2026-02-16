@@ -150,14 +150,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..setUserAgent(
         "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36",
       )
-      // --- START DIALOGUE CHANGES ---
       ..setOnJavaScriptAlertDialog((request) async {
         await _showJsAlert(request.message);
       })
       ..setOnJavaScriptConfirmDialog((request) async {
         return await _showJsConfirm(request.message);
       })
-      // --- END DIALOGUE CHANGES ---
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (p) {
@@ -183,14 +181,29 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Future<void> _showJsAlert(String message) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Alert'),
-          content: Text(message),
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Alert',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          ),
+          content: Text(
+            message,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+          ),
           actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 55),
+                backgroundColor: const Color(0xFFDF422A),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              child: const Text('OK', style: TextStyle(color: Colors.white)),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -202,19 +215,22 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Future<bool> _showJsConfirm(String message) async {
     final bool? result = await showDialog<bool>(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: const Text('Confirm',style: TextStyle(color: Colors.black)),
-          content: Text(message),
+          title: const Text(
+            'Confirm',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          ),
+          content: Text(message, style: const TextStyle(fontSize: 16)),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: const Text('OK',style: TextStyle(color: Colors.black),),
+              child: const Text('OK', style: TextStyle(color: Colors.black)),
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],
@@ -235,21 +251,29 @@ class _WebViewScreenState extends State<WebViewScreen> {
             if (await _controller.canGoBack()) {
               _controller.goBack();
             } else {
-              // If we can't go back further in web history, close the app/screen
               if (context.mounted) Navigator.of(context).pop();
             }
           },
           child: Scaffold(
-            body: Stack(
-              children: [
-                WebViewWidget(controller: _controller),
-                if (progress < 1)
-                  LinearProgressIndicator(
-                    value: progress,
-                    color: const Color(0xFFDF422A),
-                    backgroundColor: Colors.white,
-                  ),
-              ],
+            body: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                if (Navigator.canPop(context)) {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Stack(
+                children: [
+                  WebViewWidget(controller: _controller),
+                  if (progress < 1)
+                    LinearProgressIndicator(
+                      value: progress,
+                      color: const Color(0xFFDF422A),
+                      backgroundColor: Colors.white,
+                    ),
+                ],
+              ),
             ),
           ),
         ),
