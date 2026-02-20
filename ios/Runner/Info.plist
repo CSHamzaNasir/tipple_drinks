@@ -5,9 +5,9 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs access to your photos to upload files.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to your photos.</string>
+	<string>Tipple Drinks needs access to your photos so you can select and upload images of your drink recipes and menus to your profile.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs access to your camera.</string>
+	<string>Tipple Drinks needs camera access so you can take photos of your cocktail recipes and menus to share with the community.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
